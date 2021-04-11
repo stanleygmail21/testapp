@@ -1,0 +1,36 @@
+.banner{
+    position: relative;
+    height: 700px;
+    overflow: hidden;
+    z-index: 1;
+    transition: all .4s ease-in;
+    /* transform: translateY(10px); */
+}
+
+.banner__overlay--text{
+    position: absolute;
+    color: #fff;
+    z-index: 3;
+    top: 50%;
+    left: 20%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.banner__overlay--header{
+    font-size: 5.6rem;
+    margin-bottom: 4rem;
+    color: #434343;
+}
+
+.banner__overlay--image{
+    position: absolute;
+    left: 50%;      
+    transform: translate(-50%, 0%);
+}
+
+.banner__overlay--style{
+    color: var(--blue);
+}
