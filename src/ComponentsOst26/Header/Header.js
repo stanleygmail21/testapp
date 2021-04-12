@@ -22,13 +22,12 @@ const Header = props => {
 
 
     useEffect(() => {
-        const token = localStorage.getItem('auth');
+        const token = sessionStorage.getItem('auth');
         if(!token){
             history.push('/login');
-        }
-
-        getCurrentUser();
-        
+        }else{
+            getCurrentUser();
+        }        
     }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
 
@@ -38,15 +37,15 @@ const Header = props => {
             setUser(response.data.data);
             props.getUser(response.data.data)
         }).catch(error => {
-            localStorage.removeItem('auth');
+            sessionStorage.removeItem('auth');
             history.push('/login')
         })
         
     }
 
     const Onlogout = props => {
-        localStorage.removeItem('auth');
-        window.location.reload();
+        sessionStorage.removeItem('auth');
+        history.push('/login'); 
     }
 
     const displaySigninBtns = () => {
@@ -60,7 +59,8 @@ const Header = props => {
     
 
     <li className="navbar__dropdown--item">
-        {user.role === 'lender' && <Link to={`/lender/dashboard`} className="navbar__dropdown--link mb-0 d-flex">
+        {/* {user.role === 'lender' && <Link to={`/lender/dashboard`} className="navbar__dropdown--link mb-0 d-flex"> */}
+        {user.role && <Link to={`/${user.role}/dashboard`} className="navbar__dropdown--link mb-0 d-flex">
             <div className="mr-sm"><FaHome/></div>
             <span>Dashboard</span>
         </Link>}
@@ -131,7 +131,7 @@ const Header = props => {
                     <Link to="/" className="logo">OBS LEND</Link>
 
                     <div className="search__container">
-                        <input type="text" onChange={onSearch} name="search" id="search" placeholder="Search products, brands and categories" autoComplete="off" />
+                        <input type="text" onChange={onSearch} name="search" id="search" placeholder="Search products" autoComplete="off" />
                         <SearchIcon />
                         {displaySearchResult()}
 

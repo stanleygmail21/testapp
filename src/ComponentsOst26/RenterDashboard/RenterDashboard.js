@@ -1,8 +1,9 @@
 import React from 'react';
-import Backend from '../axios/Backend';
 import {Link} from 'react-router-dom';
 import ColoredCard from '../ColoredCard/ColoredCard';
 import formatNumber from '../functions/formatNumber';
+import { getMyBookings } from '../../Services/bookingService';
+
 import './RenterDashboard.css';
 
 
@@ -12,14 +13,11 @@ class RenterDashboard extends React.Component {
     bookings: []
   }
 
-  async componentDidMount(){
-    const token = localStorage.getItem('auth');
-    const bookings = await Backend('me/bookings', {
-      headers: {Authorization: `Bearer ${token}`}
-    });
-
-    this.setState({
-      bookings: bookings.data.data.data
+  componentDidMount(){
+    getMyBookings().then(response => {
+      this.setState({
+        bookings: response.data.data
+      })
     })
   }
 
@@ -37,12 +35,7 @@ class RenterDashboard extends React.Component {
         )
       })
     }
-    return <tr className="alert-primary">No data</tr>
-  }
-
-  Onlogout = props => {
-    localStorage.removeItem('auth');
-    window.location.reload();
+    return <tr className="alert-primary"><td>No data</td></tr>
   }
 
   render(){
@@ -53,8 +46,6 @@ class RenterDashboard extends React.Component {
           <div className="bg-dark border-right" id="sidebar-wrapper">
             <div className="list-group list-group-flush">
               <Link to="#" className="list-group-item list-group-item-action bg-dark">Dashboard</Link>
-              {/* <a to="#" className="list-group-item list-group-item-action bg-dark">Edit Details</a> */}
-              <Link to="#" onClick={this.Onlogout} className="list-group-item list-group-item-action bg-dark">Log out</Link>
             </div>
           </div>
 

@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import {CardElement, ElementsConsumer} from '@stripe/react-stripe-js';
 import formatNumber from '../functions/formatNumber';
-import Backend from '../axios/Backend';
+import chargeService from '../../Services/chargeService';
 
 
 
@@ -47,26 +47,20 @@ class CheckoutForm extends React.Component {
     } else {
       
       const data = { payment_id: paymentMethod.id, checkoutTotal: this.props.checkoutTotal };
-      const response = await Backend.post(`bookings/charge/${this.props.product._id}`,
-        data,
-       { headers: {
-          Authorization: `Bearer ${localStorage.getItem('auth')}`
-        }
-      });
-
-      if(response.status === 'error'){
-        this.props.setAlert(true, 'success', [`Sorry could not process payment`])
+      const id = this.props.product._id;
+      chargeService(id, data).then(response => {
+        this.props.setAlert(true, 'success', [`Your payment was successful`])
 
         this.setState({
-        disabled: false
-        })  
-      }
+          disabled: false
+        }) 
+      })
 
-      this.props.setAlert(true, 'success', [`Your payment was successfully`])
+      // this.props.setAlert(true, 'success', [`Your payment was successfully`])
 
-      this.setState({
-        disabled: false
-      })      
+      // this.setState({
+      //   disabled: false
+      // })      
 
     }
   };

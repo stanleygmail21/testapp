@@ -13,6 +13,7 @@ import CartIcon from '../icons/CartIcon';
 import StarIcon from '../icons/StarIcon';
 import formatNumber from '../functions/formatNumber';
 import { getProduct } from '../../Services/productService';
+import { getTestimonials } from '../../Services/externalService';
 
 
 class Shop extends React.Component {
@@ -29,7 +30,8 @@ class Shop extends React.Component {
             key: 'selection'
         }],
         showModal: false,
-        message: ''
+        message: '',
+        testimonials: []
     }
 
 
@@ -51,7 +53,12 @@ class Shop extends React.Component {
             this.props.setAlert(true, 'fail', ["could not get product info, please try again"]);
         })
 
-             
+       getTestimonials().then(response => {
+            this.setState({
+                testimonials: JSON.parse(response)
+            })
+        })
+        
     }
 
 
@@ -95,6 +102,34 @@ class Shop extends React.Component {
         this.setState({
             showModal: false
         })
+    }
+
+    displayTestimonials = () => {
+        if(this.state.testimonials.length !== 0){
+            return this.state.testimonials.map((testimonial, index) => {
+                if(index < 4){
+                    return(
+                        <div className="testimonials__card">
+                            <img alt="testimonial user" className="testimonials__card--img" src={testimonial.avatar} />
+        
+                            <p className="testimonials__card--name">{testimonial.name}</p>
+        
+                            <p className="testimonials__card--testimony">
+                                {testimonial.message}
+                            </p>
+        
+                            <div className="testimonials__card--icons">
+                                {this.displayTestimonialStars()}
+                            </div>
+        
+                        </div>
+        
+                    )
+                }
+            })
+        }
+
+        return <></>
     }
 
     onSendMessage = async(e) => {
@@ -230,68 +265,7 @@ class Shop extends React.Component {
                         </div>
 
                         <div className="testimonials">
-                            <div className="testimonials__card">
-                                <img alt="testimonial user" className="testimonials__card--img" src="/users/user-7.jpg" />
-
-                                <p className="testimonials__card--name">Blessing</p>
-
-                                <p className="testimonials__card--testimony">
-                                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
-                                </p>
-
-                                <div className="testimonials__card--icons">
-                                    {this.displayTestimonialStars()}
-                                </div>
-
-                            </div>
-
-
-                            <div className="testimonials__card">
-                                <img alt="testimonial user" className="testimonials__card--img" src="/users/user-1.jpg" />
-
-                                <p className="testimonials__card--name">Blessing</p>
-
-                                <p className="testimonials__card--testimony">
-                                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
-                                </p>
-
-                                <div className="testimonials__card--icons">
-                                    {this.displayTestimonialStars()}
-                                </div>
-
-                            </div>
-
-
-                            <div className="testimonials__card">
-                                <img alt="testimonial user" className="testimonials__card--img" src="/users/user-13.jpg" />
-
-                                <p className="testimonials__card--name">Blessing</p>
-
-                                <p className="testimonials__card--testimony">
-                                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
-                                </p>
-
-                                <div className="testimonials__card--icons">
-                                    {this.displayTestimonialStars()}
-                                </div>
-
-                            </div>
-
-
-                            <div className="testimonials__card">
-                                <img alt="testimonial user" className="testimonials__card--img" src="/users/default.jpg" />
-
-                                <p className="testimonials__card--name">Blessing</p>
-
-                                <p className="testimonials__card--testimony">
-                                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
-                                </p>
-
-                                <div className="testimonials__card--icons">
-                                    {this.displayTestimonialStars()}
-                                </div>
-
-                            </div>
+                            {this.displayTestimonials()}
                         </div>
 
                         <div>

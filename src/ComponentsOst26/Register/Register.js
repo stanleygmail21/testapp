@@ -2,7 +2,7 @@ import React from "react";
 
 import RegisterForm from "../RegisterForm/RegisterForm";
 
-import Backend from '../axios/Backend';
+import { signUp } from '../../Services/authService';
 
 class Register extends React.Component {
 
@@ -16,7 +16,7 @@ class Register extends React.Component {
     };
 
     componentDidMount(){
-        const token = localStorage.getItem('auth');
+        const token = sessionStorage.getItem('auth');
         
         if(token){
             this.props.history.push('/');
@@ -30,28 +30,18 @@ class Register extends React.Component {
     onSubmit = async (e) => {
         e.preventDefault();
         const {username, email, password, role, passwordConfirm} = this.state;
-        try {
-            const response = await Backend.post('register', {
-                username,
-                email,
-                role,
-                password,
-                passwordConfirm
-            });
-
-            if(response.data.status === 'success'){ 
-                let token = response.data.token;
-
-                this.props.setAlert(true, 'success', ["registration successful, redirecting..."]);
-                localStorage.setItem('auth', token)
-                setTimeout(() => {
-                    window.location.reload()
-                }, 1000)
-            }
-        } catch (error) {
+        const data = {username, email, password, role, passwordConfirm};
+        signUp(data).then(response => {
+            let token = response.token;
+            this.props.setAlert(true, 'success', ["registration successful, redirecting..."]);
+            sessionStorage.setItem('auth', token)
+            setTimeout(() => {
+                window.location.reload()
+            }, 1000)
+        }).catch (error =>  {
             this.setState({ error: {email: error.response.data.message, password: error.response.data.message} });
             this.props.setAlert(true, 'fail', [error.response.data.message])
-        }
+        })
     }
 
     handleChange = input => event => this.setState({ [input] : event.target.value });

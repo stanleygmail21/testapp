@@ -2,21 +2,28 @@ import React from 'react';
 
 import LoginForm from "../LoginForm/LoginForm";
 
-import Backend from '../axios/Backend';
+import { signIn } from '../../Services/authService';
 
 class login extends React.Component {
 
     state = {
         email:'',
         password:'',
-        error: {}
+        error: {},
+        token: sessionStorage.getItem('auth')
     };
 
+
     componentDidMount(){
-        const token = localStorage.getItem('auth');
         
-        if(token){
+        if(this.state.token){
             this.props.history.push('/');
+        }
+    }
+
+    componentDidUpdate = (prevProps, prevState) => {
+        if(prevState.token !== this.props.token){
+            window.location.reload();
         }
     }
 
@@ -27,31 +34,20 @@ class login extends React.Component {
     onSubmit = async (e) => {
         e.preventDefault();
         const {email, password} = this.state;
-        try {
-            const response = await Backend.post('login', {
-                email,
-                password
-            });
+        const data = { email, password };
+        signIn(data).then(response => {
+            let token = response.token;
 
-            // if(response.data.status === 'success'){ 
-                
-                let token = response.data.token;
-
-                this.props.setAlert(true, 'success', ["login successful, redirecting..."]);
-                localStorage.setItem('auth', token)
-                setTimeout(() => {
-                    window.location.reload()
-                }, 1000)
-            // }
-        } catch (error) {
-            // let err = "could not connect, please check your internet connection";
-            if(error.response){
-                this.setState({ error: {email: error.response.data.message, password: error.response.data.message} });
-                let err = error.response.data.message;
-                this.props.setAlert(true, 'fail', [err])
-
-            }
-        }
+            this.props.setAlert(true, 'success', ["login successful, redirecting..."]);
+            sessionStorage.setItem('auth', token)
+            setTimeout(() => {
+                window.location.reload()
+            }, 1000)
+        }).catch (error => {
+            this.setState({ error: {email: error.response.data.message, password: error.response.data.message} });
+            let err = error.response.data.message;
+            this.props.setAlert(true, 'fail', [err])
+        });
     }
 
     handleChange = input => event => this.setState({ [input] : event.target.value });

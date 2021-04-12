@@ -11,7 +11,7 @@ class LenderDashboard extends React.Component {
     bookings: []
   }
 
-  async componentDidMount(){
+  componentDidMount(){
     getMyBookings().then(response => {
       this.setState({
         bookings: response.data.data
@@ -36,10 +36,7 @@ class LenderDashboard extends React.Component {
     return <tr className="alert-primary"><td>No data</td></tr>
   }
 
-  Onlogout = props => {
-    localStorage.removeItem('auth');
-    window.location.reload();
-  }
+  
 
   render(){
 
@@ -47,7 +44,9 @@ class LenderDashboard extends React.Component {
       <>
         <div className="d-flex" id="wrapper">
 
-          <LenderSideNav/>
+          <LenderSideNav
+            history={this.props.history}
+          />
 
           <div className="container">
             <div id="stats">

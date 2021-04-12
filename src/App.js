@@ -11,7 +11,6 @@ import Login from './ComponentsOst26/Login/Login';
 import Register from './ComponentsOst26/Register/Register';
 import ProductShow from './ComponentsOst26/ProductShow/ProductShow';
 import RenterDashboard from './ComponentsOst26/RenterDashboard/RenterDashboard';
-import LenderDashboard from './ComponentsOst26/LenderDashboard/LenderDashboard';
 import LenderProductList from './ComponentsOst26/LenderProductList/LenderProductList';
 import LenderProductNew from './ComponentsOst26/LenderProductNew/LenderProductNew';
 import LenderProductEdit from './ComponentsOst26/LenderProductEdit/LenderProductEdit';
@@ -24,7 +23,8 @@ class App extends React.Component {
     alert: {status: false, type: '', message:[]},
     page: 1,
     linkSkip: 1,
-    currentUser: null
+    currentUser: null,
+    token: sessionStorage.getItem('auth')
   }
 
   setAlert = (status, type='', message='') => {
@@ -52,13 +52,14 @@ class App extends React.Component {
             <Switch>
               <Route path="/" exact component={props => <Home 
                   onAddToCart={this.onAddToCart}
-                  wishlist={JSON.parse(localStorage.getItem('wishList'))}
+                  wishlist={JSON.parse(sessionStorage.getItem('wishList'))}
                   {...props}
                 />}
               />
 
               <Route path="/login" exact component={props => <Login 
                   setAlert={this.setAlert}
+                  token={this.state.token}
                   {...props}
                 />}
               />
@@ -75,16 +76,16 @@ class App extends React.Component {
                 />}
               />
 
-              <Route path="/lender/dashboard/withdrawal" exact component={props => <LenderWithdraw 
+              <Route path="/lender/dashboard" exact component={props => <LenderProductList 
                   setAlert={this.setAlert}
-                  getUser={this.getUser} 
-                  currentUser={this.state.currentUser} 
                   {...props}
                 />}
               />
 
-              <Route path="/lender/dashboard" exact component={props => <LenderDashboard 
+              <Route path="/lender/dashboard/withdrawal" exact component={props => <LenderWithdraw 
                   setAlert={this.setAlert}
+                  getUser={this.getUser} 
+                  currentUser={this.state.currentUser} 
                   {...props}
                 />}
               />
