@@ -1,11 +1,11 @@
 export async function signIn(data)  {
-    return fetch(`http://localhost:8000/api/v1/login`,
+    return fetch(`http://3.95.231.42:8080/api/v1/login`,
     {
         method: 'POST',
         mode: 'cors',
         headers: { 
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin":"http://localhost:8000/api/v1/login"
+        "Access-Control-Allow-Origin":"http://3.95.231.42:8080/api/v1/login"
         },
         body: JSON.stringify(data)
 
@@ -14,13 +14,13 @@ export async function signIn(data)  {
 }
 
 export async function signUp(data)  {
-    return fetch(`http://localhost:8000/api/v1/register`,
+    return fetch(`http://3.95.231.42:8080/api/v1/register`,
     {
         method: 'POST',
         mode: 'cors',
         headers: { 
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin":"http://localhost:8000/api/v1/register"
+        "Access-Control-Allow-Origin":"http://3.95.231.42:8080/api/v1/register"
         },
         body: JSON.stringify(data)
 
