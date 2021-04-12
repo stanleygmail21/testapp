@@ -1,14 +1,14 @@
 const token = sessionStorage.getItem('auth');
 
 export async function getMe()  {
-    return fetch(`http://3.95.231.42:8080/api/v1/me`,
+    return fetch(`${process.env.REACT_APP_API_BASE_URL}api/v1/me`,
     {
         method: 'GET',
         mode: 'cors',
         headers: { 
         "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin":"http://3.95.231.42:8080/api/v1/me"
+        "Access-Control-Allow-Origin":`${process.env.REACT_APP_API_BASE_URL}api/v1/me`
         
         },
     })
