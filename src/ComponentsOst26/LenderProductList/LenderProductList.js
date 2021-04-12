@@ -10,13 +10,22 @@ class LenderProductList extends React.Component {
     products: []
   }
 
+  mount = false
+
   componentDidMount(){
     
+    this.mount = true
     getMyProducts().then(response => {
-      this.setState({
-        products: response.data.data
-      })
+      if(this.mount){
+        this.setState({
+          products: response.data.data
+        })
+      }
     })
+  }
+
+  componentWillUnmount = () => {
+    this.mount = false
   }
 
   onDelete = async(e) => {

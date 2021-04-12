@@ -34,9 +34,10 @@ class Shop extends React.Component {
         testimonials: []
     }
 
+    mount = false;
 
     componentDidMount(){
-      
+        this.mount = true
         const id = this.props.match.params.id;
         if(!this.props.currentUser){
             this.setState({
@@ -45,29 +46,39 @@ class Shop extends React.Component {
         }
 
         getProduct(id).then(response => {
-            this.setState({
-                product: response.data.data,
-                checkoutTotal: response.data.data.price
-            })
+            if(this.mount){
+                this.setState({
+                    product: response.data.data,
+                    checkoutTotal: response.data.data.price
+                })
+            }
         }).catch (() => {
             this.props.setAlert(true, 'fail', ["could not get product info, please try again"]);
         })
 
        getTestimonials().then(response => {
-            this.setState({
-                testimonials: JSON.parse(response)
-            })
+            if(this.mount){
+            
+                this.setState({
+                    testimonials: JSON.parse(response)
+                })
+            }
         })
+      
+        
         
     }
 
+    componentWillUnmount = () => {
+        this.mount = false
+    }
 
     displayStars = () => {
         const starsArray = [];
         for(let i=1; i <= 5; i++){
             starsArray.push(<div key={i} className={`star__icon star__icon--${i}`}><StarIcon size={25}/></div>);
         }
-        return starsArray;
+        return starsArray.push(<div key={1}></div>);
     }
 
     displayTestimonialStars = () => {
@@ -75,7 +86,7 @@ class Shop extends React.Component {
         for(let i=1; i <= 5; i++){
             starsArray.push(<div key={i} className={``}><StarIcon size={18} /></div>);
         }
-        return starsArray;
+        return starsArray.push(<div key={1}></div>);
     }
     
     onChange = (item) => {
@@ -109,7 +120,7 @@ class Shop extends React.Component {
             return this.state.testimonials.map((testimonial, index) => {
                 if(index < 4){
                     return(
-                        <div className="testimonials__card">
+                        <div key={testimonial.id} className="testimonials__card">
                             <img alt="testimonial user" className="testimonials__card--img" src={testimonial.avatar} />
         
                             <p className="testimonials__card--name">{testimonial.name}</p>
@@ -126,7 +137,10 @@ class Shop extends React.Component {
         
                     )
                 }
+                return
+
             })
+
         }
 
         return <></>

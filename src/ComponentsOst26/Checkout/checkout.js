@@ -5,9 +5,6 @@ import {
     FaCheckCircle
 } from "react-icons/fa";
 
-import Personal from '../forms/Personal';
-import Shipping from '../forms/Shipping';
-import Payment from '../forms/Payment';
 import formatNumber from '../functions/formatNumber';
 
 class checkout extends Component {
